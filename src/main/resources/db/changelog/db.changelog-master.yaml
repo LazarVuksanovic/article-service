@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changelogs/1-create-category.yaml
+  - include:
+      file: db/changelog/changelogs/2-create-tag.yaml
+  - include:
+      file: db/changelog/changelogs/3-create-article.yaml
+  - include:
+      file: db/changelog/changelogs/4-article-tag.yaml
+  - include:
+      file: db/changelog/changelogs/5-create-users.yaml
+  - include:
+      file: db/changelog/changelogs/6-create-homepage.yaml
+  - include:
+      file: db/changelog/seedData.yaml
+  - include:
+      file: db/changelog/seed-homepage-data.yaml

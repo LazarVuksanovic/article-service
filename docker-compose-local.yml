@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pravda-postgres
+    environment:
+      POSTGRES_DB: pravda
+      POSTGRES_USER: pravda
+      POSTGRES_PASSWORD: pravda
+    ports:
+      - "8081:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - backend
+
+  app:
+    image: ghcr.io/lazarvuksanovic/pravda-article-service:0.0.1-SNAPSHOT
+    container_name: pravda-article-service
+    depends_on:
+      - db
+    environment:
+      # JDBC
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pravda
+      SPRING_DATASOURCE_USERNAME: pravda
+      SPRING_DATASOURCE_PASSWORD: pravda
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_LIQUIBASE_ENABLED: "true"
+      SPRING_LIQUIBASE_CHANGE_LOG: classpath:/db/changelog/db.changelog-master.yaml
+
+      LOGGING_LEVEL_ROOT: INFO
+      # JAVA_TOOL_OPTIONS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - backend
+
+volumes:
+  db-data:
+
+networks:
+  backend:

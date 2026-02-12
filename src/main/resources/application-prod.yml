@@ -1,0 +1,15 @@
+cors:
+  allowed-origins:
+    - "https://admin.pravda.rs"
+    - "https://plus.pravda.rs"
+    - "https://pravda.rs"
+
+application:
+  frontend:
+    url: "https://plus.pravda.rs"
+    revalidate-secret: "$2y$05$xwn2610pX/BRUBl0v20WCerGia.SxOh7ow1eveTJjhKqjyrxdYXUy"
+  security:
+    jwt:
+      cookie:
+        secure: true
+        domain: pravda.rs

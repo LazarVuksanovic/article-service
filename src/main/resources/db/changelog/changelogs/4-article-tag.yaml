@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-article-tag
+      author: pravda-team
+      changes:
+        - createTable:
+            tableName: article_tag
+            columns:
+              - column:
+                  name: article_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: article_tag
+            columnNames: article_id, tag_id
+            constraintName: pk_article_tag
+
+        - addForeignKeyConstraint:
+            baseTableName: article_tag
+            baseColumnNames: article_id
+            referencedTableName: article
+            referencedColumnNames: id
+            constraintName: fk_article_tag_article
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: article_tag
+            baseColumnNames: tag_id
+            referencedTableName: tag
+            referencedColumnNames: id
+            constraintName: fk_article_tag_tag
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: article_tag
+            indexName: idx_article_tag_article_id
+            columns:
+              - column:
+                  name: article_id
+
+        - createIndex:
+            tableName: article_tag
+            indexName: idx_article_tag_tag_id
+            columns:
+              - column:
+                  name: tag_id

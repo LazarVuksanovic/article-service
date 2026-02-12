@@ -1,0 +1,126 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-article-table
+      author: pravda-team
+      changes:
+        - createTable:
+            tableName: article
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: title
+                  type: jsonb
+                  defaultValueComputed: "'{}'::jsonb"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: content
+                  type: jsonb
+                  defaultValueComputed: "'{}'::jsonb"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: teaser
+                  type: jsonb
+                  defaultValueComputed: "'{}'::jsonb"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: slug
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_premium
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: published_at
+                  type: TIMESTAMP
+
+              - column:
+                  name: cover_image_url
+                  type: VARCHAR(255)
+
+              - column:
+                  name: source
+                  type: VARCHAR(255)
+
+              - column:
+                  name: author
+                  type: VARCHAR(255)
+
+              - column:
+                  name: canonical_url
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: created_by
+                  type: VARCHAR(255)
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "NOW()"
+
+              - column:
+                  name: last_modified_by
+                  type: VARCHAR(255)
+
+              - column:
+                  name: last_modified_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "NOW()"
+
+        - addForeignKeyConstraint:
+            baseTableName: article
+            baseColumnNames: category_id
+            referencedTableName: category
+            referencedColumnNames: id
+            constraintName: fk_article_category
+            onDelete: SET NULL
+
+        - createIndex:
+            tableName: article
+            indexName: idx_article_category_id
+            columns:
+              - column:
+                  name: category_id
+
+        # 1. MUST enable the extension first
+        - sql:
+            dbms: postgresql
+            sql: CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+        # 2. Use raw SQL for these specific indexes
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE INDEX idx_article_title_cyrillic ON article USING gin ((title ->> 'sr-Cyrl') gin_trgm_ops);
+              CREATE INDEX idx_article_title_latin ON article USING gin ((title ->> 'sr-Latn') gin_trgm_ops);

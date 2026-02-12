@@ -1,0 +1,197 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.1-seed-categories
+      author: pravda-team
+      changes:
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"Politics","sr-Latn":"Politika","sr-Cyrl":"Политика"}'::jsonb
+              - column: { name: parent_id, value: null }
+              - column: { name: slug, value: politika }
+
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"Domestic","sr-Latn":"Domaće","sr-Cyrl":"Домаће"}'::jsonb
+              - column:
+                  name: parent_id
+                  valueComputed: >
+                    (SELECT id FROM category
+                     WHERE name @> '{"en":"Politics"}'::jsonb LIMIT 1)
+              - column: { name: slug, value: domaće }
+
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"World","sr-Latn":"Svet","sr-Cyrl":"Свет"}'::jsonb
+              - column:
+                  name: parent_id
+                  valueComputed: >
+                    (SELECT id FROM category
+                     WHERE name @> '{"en":"Politics"}'::jsonb LIMIT 1)
+              - column: { name: slug, value: svet }
+
+  - changeSet:
+      id: 1.0.1-seed-tags
+      author: pravda-team
+      changes:
+        - insert:
+            tableName: tag
+            columns:
+              - column: { name: id, value: b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"NBA","sr-Latn":"NBA","sr-Cyrl":"НБА"}'::jsonb
+
+        - insert:
+            tableName: tag
+            columns:
+              - column: { name: id, value: b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"Nikola Jokić","sr-Latn":"Nikola Jokić","sr-Cyrl":"Никола Јокић"}'::jsonb
+
+        - insert:
+            tableName: tag
+            columns:
+              - column: { name: id, value: b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23 }
+              - column:
+                  name: name
+                  valueComputed: >-
+                    '{"en":"Denver Nuggets","sr-Latn":"Denver Nagetsi","sr-Cyrl":"Денвер Нагетси"}'::jsonb
+
+  - changeSet:
+      id: 1.0.1-seed-articles
+      author: pravda-team
+      changes:
+        - insert:
+            tableName: article
+            columns:
+              - column: { name: id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14 }
+              - column:
+                  name: title
+                  valueComputed: >-
+                    '{"en":"Domestic policy shifts","sr-Latn":"Promene domaće politike","sr-Cyrl":"Промене домаће политике"}'::jsonb
+              - column:
+                  name: content
+                  valueComputed: >-
+                    '{
+                      "en":"In recent months, several domestic policy initiatives have accelerated across multiple institutions, revealing both opportunities and constraints for stakeholders. While regulatory bodies highlight transparency and accountability, practical implementation depends on coordination, funding, and sustained public engagement. Experts suggest that consistent monitoring, open data, and local partnerships can mitigate risks and ensure measurable outcomes. Case studies show that incremental reforms, supported by clear metrics and timely feedback loops, outperform large one-off interventions.",
+                      "sr-Latn":"U poslednjih nekoliko meseci, više domaćih političkih inicijativa ubrzalo je rad različitih institucija, otkrivajući i prilike i ograničenja za zainteresovane strane. Iako regulatori ističu transparentnost i odgovornost, praktična primena zavisi od koordinacije, finansiranja i kontinuiranog angažmana javnosti. Stručnjaci predlažu da dosledno praćenje, otvoreni podaci i lokalna partnerstva mogu umanjiti rizike i obezbediti merljive rezultate. Studije slučaja pokazuju da postepene reforme, potkrepljene jasnim metrikama i pravovremenim povratnim informacijama, nadmašuju velike jednokratne intervencije.",
+                      "sr-Cyrl":"У последњих неколико месеци, више домаћих политичких иницијатива убрзало је рад различитих институција, откривајући и прилике и ограничења за заинтересоване стране. Иако регулатори истичу транспарентност и одговорност, практична примена зависи од координације, финансирања и континуираног ангажмана јавности. Стручњаци предлажу да доследно праћење, отворени подаци и локална партнерства могу умањити ризике и обезбедити мерљиве резултате. Студије случаја показују да постепене реформе, поткрепљене јасним метрикама и правовременим повратним информацијама, надмашују велике једнократне интервенције."
+                    }'::jsonb
+              - column:
+                  name: teaser
+                  valueComputed: >-
+                    '{"en":"How incremental reforms reshape domestic policy.","sr-Latn":"Kako postepene reforme menjaju domaću politiku.","sr-Cyrl":"Како постепене реформе мењају домаћу политику."}'::jsonb
+              - column:
+                  name: slug
+                  value: promene-domace-politike
+              - column: { name: is_archived, valueBoolean: false }
+              - column: { name: cover_image_url, value: "https://example.com/img1.jpg" }
+              - column: { name: source, value: "Pravda Desk" }
+              - column: { name: author, value: "Jane Doe" }
+              - column: { name: canonical_url, value: "https://pravda.rs/politics/domestic-1" }
+              - column:
+                  name: category_id
+                  valueComputed: >
+                    (SELECT id FROM category
+                     WHERE name @> '{"en":"Domestic"}'::jsonb LIMIT 1)
+
+        - insert:
+            tableName: article
+            columns:
+              - column: { name: id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15 }
+              - column:
+                  name: title
+                  valueComputed: >-
+                    '{"en":"World trends and local impact","sr-Latn":"Svetski trendovi i lokalni uticaj","sr-Cyrl":"Светски трендови и локални утицај"}'::jsonb
+              - column:
+                  name: content
+                  valueComputed: >-
+                    '{
+                      "en":"Global developments continue to influence local economies, media narratives, and civic expectations. Analysts note that capacity building and cross-border collaboration remain essential to adapt quickly to change. In journalism, clear sourcing, context, and verification practices are critical, especially when covering complex or fast-moving stories. Sustained investment in digital infrastructure, training, and resilient workflows can help teams deliver timely, accurate reporting while maintaining editorial independence.",
+                      "sr-Latn":"Globalna dešavanja nastavljaju da utiču na lokalne ekonomije, medijske narative i očekivanja građana. Analitičari navode da su izgradnja kapaciteta i prekogranična saradnja ključni za brzu adaptaciju na promene. U novinarstvu su jasni izvori, kontekst i prakse verifikacije presudni, naročito kada se izveštava o složenim ili dinamičnim temama. Kontinuirana ulaganja u digitalnu infrastrukturu, obuke i otporne radne tokove pomažu timovima da isporuče pravovremeno i tačno izveštavanje uz očuvanje uređivačke nezavisnosti.",
+                      "sr-Cyrl":"Глобална дешавања настављају да утичу на локалне економије, медијске наративе и очекивања грађана. Аналитичари наводе да су изградња капацитета и прекогранична сарадња кључни за брзу адаптацију на промене. У новинарству су јасни извори, контекст и праксе верификације пресудни, нарочито када се извештава о сложеним или динамичним темама. Континуирана улагања у дигиталну инфраструктуру, обуке и отпорне радне токове помажу тимовима да испоруче правовремено и тачно извештавање уз очување уређивачке независности."
+                    }'::jsonb
+              - column:
+                  name: teaser
+                  valueComputed: >-
+                    '{"en":"Why global stories matter locally.","sr-Latn":"Zašto globalne priče znače lokalno.","sr-Cyrl":"Зашто глобалне приче значе локално."}'::jsonb
+              - column:
+                  name: slug
+                  value: svetski-trendovi-lokalni-uticaj
+              - column: { name: is_archived, valueBoolean: true }
+              - column: { name: cover_image_url, value: "https://example.com/img2.jpg" }
+              - column: { name: source, value: "Agencies" }
+              - column: { name: author, value: "John Smith" }
+              - column: { name: canonical_url, value: "https://pravda.rs/politics/world-1" }
+              - column:
+                  name: category_id
+                  valueComputed: >
+                    (SELECT id FROM category
+                     WHERE name @> '{"en":"World"}'::jsonb LIMIT 1)
+
+  - changeSet:
+      id: 1.0.1-seed-article-tags
+      author: pravda-team
+      changes:
+        - insert:
+            tableName: article_tag
+            columns:
+              - column: { name: article_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14 }
+              - column:
+                  name: tag_id
+                  valueComputed: >
+                    (SELECT id FROM tag WHERE name @> '{"en":"NBA"}'::jsonb LIMIT 1)
+
+        - insert:
+            tableName: article_tag
+            columns:
+              - column: { name: article_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14 }
+              - column:
+                  name: tag_id
+                  valueComputed: >
+                    (SELECT id FROM tag WHERE name @> '{"en":"Nikola Jokić"}'::jsonb LIMIT 1)
+
+        - insert:
+            tableName: article_tag
+            columns:
+              - column: { name: article_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14 }
+              - column:
+                  name: tag_id
+                  valueComputed: >
+                    (SELECT id FROM tag WHERE name @> '{"en":"Denver Nuggets"}'::jsonb LIMIT 1)
+
+        - insert:
+            tableName: article_tag
+            columns:
+              - column: { name: article_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15 }
+              - column:
+                  name: tag_id
+                  valueComputed: >
+                    (SELECT id FROM tag WHERE name @> '{"en":"NBA"}'::jsonb LIMIT 1)
+
+        - insert:
+            tableName: article_tag
+            columns:
+              - column: { name: article_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15 }
+              - column:
+                  name: tag_id
+                  valueComputed: >
+                    (SELECT id FROM tag WHERE name @> '{"en":"Denver Nuggets"}'::jsonb LIMIT 1)

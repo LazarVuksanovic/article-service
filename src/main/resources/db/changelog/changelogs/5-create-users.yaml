@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-create-users
+      author: pravda-team
+      changes:
+        - createTable:
+            tableName: p_user
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: email, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: password, type: VARCHAR(255) }
+              - column: { name: first_name, type: VARCHAR(255) }
+              - column: { name: last_name, type: VARCHAR(255) }
+              - column: { name: role, type: VARCHAR(50) }
+              - column: { name: created_by, type: VARCHAR(255) }
+              - column: { name: created_at, type: TIMESTAMP, defaultValueComputed: "NOW()" }
+              - column: { name: last_modified_by, type: VARCHAR(255) }
+              - column: { name: last_modified_at, type: TIMESTAMP, defaultValueComputed: "NOW()" }
+
+        - insert:
+            tableName: p_user
+            columns:
+              - column: { name: id, valueComputed: "gen_random_uuid()" }
+              - column: { name: email, value: "admin@pravda.rs" }
+              - column: { name: password, value: "$2a$10$hN7FAkpbxXU0bxCFn.9mlexs1ANYP1Ufo/68ibtn/Q6PIC6hoyDIe" } # BCrypt hash for 'admin123'
+              - column: { name: first_name, value: "Lazar" }
+              - column: { name: last_name, value: "Admin" }
+              - column: { name: role, value: "ADMIN" }

@@ -1,0 +1,10 @@
+cors:
+  allowed-origins:
+    - "http://localhost:3000"
+    - "http://localhost:3001"
+    - "https://static.38.126.13.49.clients.your-server.de"
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.springframework.security: DEBUG

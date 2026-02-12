@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: article-service
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    clear-checksums: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:8081/pravda
+    username: pravda
+    password: pravda
+    driver-class-name: org.postgresql.Driver
+
+locale:
+  default-locale: sr-Cyrl
+  supported:
+    - sr-Cyrl
+    - sr-Latn
+
+server:
+  servlet:
+    context-path: /api
+
+application:
+  frontend:
+    url: "http://localhost:3001"
+    revalidate-secret: "your_chosen_secret_password"
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 900000 # 15 minutes
+      refresh-token:
+        expiration: 21600000 # 6 hours
+      cookie:
+        secure: false
+        domain: null

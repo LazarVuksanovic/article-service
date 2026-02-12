@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.2-seed-more-articles
+      author: pravda
+      changes:
+        - insert:
+            tableName: article
+            columns:
+              - column: { name: id, value: c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03 }
+              - column: { name: title, valueComputed: "'{\"en\":\"Economic Growth 2026\",\"sr-Latn\":\"Ekonomski rast 2026\",\"sr-Cyrl\":\"Економски раст 2026\"}'::jsonb" }
+              - column: { name: content, valueComputed: "'{\"en\":\"Content...\",\"sr-Latn\":\"Sadržaj...\",\"sr-Cyrl\":\"Садржај...\"}'::jsonb" }
+              - column: { name: teaser, valueComputed: "'{\"en\":\"Economy teaser\",\"sr-Latn\":\"Ekonomski uvod\",\"sr-Cyrl\":\"Економски увод\"}'::jsonb" }
+              - column: { name: slug, valueComputed: "'{\"en\":\"econ-2026\",\"sr-Latn\":\"ekon-2026\",\"sr-Cyrl\":\"екон-2026\"}'::jsonb" }
+              - column: { name: is_archived, valueBoolean: false }
+              - column: { name: author, value: "Redakcija" }
+              - column: { name: category_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11 }
+        - insert:
+            tableName: article
+            columns:
+              - column: { name: id, value: c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a04 }
+              - column: { name: title, valueComputed: "'{\"en\":\"Tech Innovations\",\"sr-Latn\":\"Tehnološke inovacije\",\"sr-Cyrl\":\"Технолошке иновације\"}'::jsonb" }
+              - column: { name: content, valueComputed: "'{\"en\":\"Content...\",\"sr-Latn\":\"Sadržaj...\",\"sr-Cyrl\":\"Садржај...\"}'::jsonb" }
+              - column: { name: teaser, valueComputed: "'{\"en\":\"Tech teaser\",\"sr-Latn\":\"Tehno uvod\",\"sr-Cyrl\":\"Техно увод\"}'::jsonb" }
+              - column: { name: slug, valueComputed: "'{\"en\":\"tech-2026\",\"sr-Latn\":\"tech-2026\",\"sr-Cyrl\":\"tech-2026\"}'::jsonb" }
+              - column: { name: category_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11 }
+              - column: { name: is_archived, valueBoolean: false }
+              - column: { name: author, value: "Miloš Tehnika" }
+
+  - changeSet:
+      id: 1.0.3-seed-homepages
+      author: pravda
+      changes:
+        # ONLY Global Homepage
+        - insert:
+            tableName: home_page
+            columns:
+              - column: { name: id, value: f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01 }
+              - column: { name: category_id, value: null }
+
+        # Seed Nav Categories for Global
+        - insert:
+            tableName: home_page_nav_categories
+            columns:
+              - column: { name: home_page_id, value: f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01 }
+              - column: { name: nav_categories_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11 }
+              - column: { name: priority, value: 0 }
+        - insert:
+            tableName: home_page_nav_categories
+            columns:
+              - column: { name: home_page_id, value: f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01 }
+              - column: { name: nav_categories_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12 }
+              - column: { name: priority, value: 1 }
+
+        # Seed Global Main Articles
+        - insert:
+            tableName: home_page_main_articles
+            columns:
+              - column: { name: home_page_id, value: f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01 }
+              - column: { name: main_id, value: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14 }
+              - column: { name: priority, value: 0 }
+        - insert:
+            tableName: home_page_main_articles
+            columns:
+              - column: { name: home_page_id, value: f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01 }
+              - column: { name: main_id, value: c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a04 }
+              - column: { name: priority, value: 1 }
