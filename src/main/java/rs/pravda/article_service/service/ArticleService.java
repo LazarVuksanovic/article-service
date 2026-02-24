@@ -8,6 +8,7 @@ import rs.pravda.article_service.dto.article.TranslatedArticle;
 import rs.pravda.article_service.dto.article.UpdateArticleDto;
 import rs.pravda.article_service.model.Article;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,8 @@ public interface ArticleService extends TranslationService<Article, TranslatedAr
     TranslatedArticle getTranslatedArticleBySlug(String slug);
 
     Page<Article> getArticles(ArticledFilterDto filter, Pageable pageable);
+
+    List<Article> getArticles(List<UUID> articleIds);
 
     Page<TranslatedArticle> getArticlesTranslated(ArticledFilterDto filter, Pageable pageable);
 

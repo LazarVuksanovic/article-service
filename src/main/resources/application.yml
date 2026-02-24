@@ -36,3 +36,11 @@ application:
       cookie:
         secure: false
         domain: null
+  s3:
+    access-key: mock
+    secret-key: mock
+    endpoint: fsn1.your-objectstorage.com
+    region: eu-central
+    bucket: pravda-images
+  imgproxy:
+    url: "http://localhost:8082"

@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-create-image-table
+      author: pravda
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: file_path, type: VARCHAR(255), constraints: { nullable: false } } # S3 Key
+              - column: { name: filename, type: VARCHAR(255) }
+              - column: { name: content_type, type: VARCHAR(50) }
+              - column: { name: size, type: BIGINT }
+              - column: { name: created_at, type: TIMESTAMP, defaultValueComputed: "NOW()" }
+              - column: { name: created_by, type: VARCHAR(255) }

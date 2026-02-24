@@ -70,6 +70,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<Article> getArticles(List<UUID> articleIds) {
+        return articleRepository.findByIdIn(articleIds);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<TranslatedArticle> getArticlesTranslated(ArticledFilterDto filter, Pageable pageable) {
         return null;
@@ -127,7 +132,7 @@ public class ArticleServiceImpl implements ArticleService {
         var savedArticle = articleRepository.save(article);
 
         revalidationService.revalidateArticle(savedArticle);
-        homePageService.getAffectedHomePages(article.getId()).forEach(revalidationService::revalidateHomePage);
+        homePageService.getAffectedCategories(article.getId()).forEach(revalidationService::revalidateHomePage);
     }
 
     @Override

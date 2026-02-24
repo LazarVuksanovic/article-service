@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-create-image-tag-table
+      author: pravda
+      changes:
+        - createTable:
+            tableName: image_tag
+            columns:
+              - column:
+                  name: image_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: image_tag
+            columnNames: image_id, tag_id
+            constraintName: pk_image_tag
+
+        - addForeignKeyConstraint:
+            baseTableName: image_tag
+            baseColumnNames: image_id
+            referencedTableName: image
+            referencedColumnNames: id
+            constraintName: fk_image_tag_image
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: image_tag
+            baseColumnNames: tag_id
+            referencedTableName: tag
+            referencedColumnNames: id
+            constraintName: fk_image_tag_tag
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: image_tag
+            indexName: idx_image_tag_tag_id
+            columns:
+              - column:
+                  name: tag_id
