@@ -36,4 +36,9 @@ public class ArticleSection {
 
     @Column(name = "sort_order", nullable = false)
     private Integer order;
+
+    public static ArticleSection increaseOrder(ArticleSection articleSection){
+        articleSection.setOrder(articleSection.getOrder() + 1);
+        return articleSection;
+    }
 }

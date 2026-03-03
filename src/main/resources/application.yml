@@ -32,7 +32,7 @@ application:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 900000 # 15 minutes
       refresh-token:
-        expiration: 21600000 # 6 hours
+        expiration: 21600 # 6 hours
       cookie:
         secure: false
         domain: null

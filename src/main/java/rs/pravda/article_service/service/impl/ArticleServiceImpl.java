@@ -8,14 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import rs.pravda.article_service.dto.article.ArticledFilterDto;
-import rs.pravda.article_service.dto.article.CreateArticleDto;
-import rs.pravda.article_service.dto.article.TranslatedArticle;
-import rs.pravda.article_service.dto.article.UpdateArticleDto;
+import rs.pravda.article_service.dto.article.*;
 import rs.pravda.article_service.exception.EntityAlreadyExists;
 import rs.pravda.article_service.exception.EntityNotFoundException;
 import rs.pravda.article_service.localization.TranslatedText;
 import rs.pravda.article_service.model.Article;
+import rs.pravda.article_service.model.homepage.Section;
 import rs.pravda.article_service.repository.ArticleRepository;
 import rs.pravda.article_service.repository.specification.ArticleSpecification;
 import rs.pravda.article_service.service.*;
@@ -36,6 +34,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final RevalidationService revalidationService;
     private final HomePageService homePageService;
+    private final PublishingServiceImpl publishingService;
     private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
     @Override
@@ -87,9 +86,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (articleRepository.existsBySlug(slug))
             throw new EntityAlreadyExists("Article with slug");
 
-        var category = categoryService.getCategory(createArticle.categoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category"));
-
+        var category = categoryService.getCategory(createArticle.categoryId()).orElseThrow(() -> new EntityNotFoundException("Category"));
         var tags = new HashSet<>(tagService.getTags(createArticle.tagIds()));
 
         var article = Article.builder()
@@ -104,11 +101,19 @@ public class ArticleServiceImpl implements ArticleService {
                 .tags(tags)
                 .build();
 
-        if(createArticle.publish()) {
-            article.setPublishedAt(LocalDateTime.now());
+        var publishConfig = ArticlePublishConfig.builder()
+                .pushToCategory(createArticle.publishArticle().pushToCategory())
+                .pushToHome(createArticle.publishArticle().pushToHome())
+                .homeSection(createArticle.publishArticle().homeSection())
+                .build();
+
+        if (createArticle.publishArticle().publishDate() == null) {
+            return publishingService.publishArticle(article, publishConfig);
         }
 
-        return articleRepository.save(article);
+        var savedArticle = articleRepository.saveAndFlush(article);
+        publishingService.scheduleArticle(savedArticle, createArticle.publishArticle().publishDate(), publishConfig);
+        return savedArticle;
     }
 
     @Override
@@ -142,6 +147,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         var article = articleRepository.findById(articleId).orElseThrow(() -> new EntityNotFoundException("Article"));
         homePageService.removeArticleFromAllLayouts(articleId);
+        revalidationService.revalidateArticle(article);
         articleRepository.delete(article);
     }
 
@@ -153,20 +159,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void publishArticle(UUID articleId) {
-        Assert.notNull(articleId, "Article id must not be null");
-
-        var article = getArticle(articleId).orElseThrow(() -> new EntityNotFoundException("Article"));
-
-        if(article.getPublishedAt() != null) {
-            throw new IllegalStateException("Article is already published");
-        }
-
-        article.setPublishedAt(LocalDateTime.now());
-        articleRepository.save(article);
-    }
-
-    @Override
     @Transactional
     public void hideArticle(UUID articleId) {
         Assert.notNull(articleId, "Article id must not be null");
@@ -174,6 +166,7 @@ public class ArticleServiceImpl implements ArticleService {
         var article = getArticle(articleId).orElseThrow(() -> new EntityNotFoundException("Article"));
         article.setPublishedAt(null);
         homePageService.removeArticleFromAllLayouts(articleId);
+        revalidationService.revalidateArticle(article);
         articleRepository.save(article);
     }
 
@@ -205,10 +198,11 @@ public class ArticleServiceImpl implements ArticleService {
                 .replaceAll("\\s+", "-")
                 .replaceAll("-{2,}", "-")
                 .replaceAll("^-|-$", "")
+                .replaceAll("ć", "c")
+                .replaceAll("š", "s")
+                .replaceAll("đ", "dj")
+                .replaceAll("č", "c")
+                .replaceAll("ž", "z")
                 + "-" + LocalDate.now();
-    }
-
-    private String articlePath(Article article){
-        return "/" + article.getCategory().getSlug() + "/" + article.getSlug();
     }
 }

@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-create-scheduled-publishing-table
+      author: pravda-team
+      changes:
+        - createTable:
+            tableName: scheduled_publishing
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: article_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: scheduled_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: publish_config
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "NOW()"
+
+        - addForeignKeyConstraint:
+            baseTableName: scheduled_publishing
+            baseColumnNames: article_id
+            referencedTableName: article
+            referencedColumnNames: id
+            constraintName: fk_scheduled_article
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: scheduled_publishing
+            indexName: idx_scheduled_time
+            columns:
+              - column:
+                  name: scheduled_at

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import rs.pravda.article_service.dto.article.*;
 import rs.pravda.article_service.exception.EntityNotFoundException;
 import rs.pravda.article_service.model.Article;
+import rs.pravda.article_service.model.homepage.Section;
 import rs.pravda.article_service.service.ArticleService;
+import rs.pravda.article_service.service.PublishingService;
 
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import static rs.pravda.article_service.dto.article.ArticleDto.toArticleDto;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final PublishingService publishArticle;
 
     @GetMapping
     Page<Article> getArticles(
@@ -66,7 +69,7 @@ public class ArticleController {
         articleService.updateArticle(id, updateArticle);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteArticle(@PathVariable UUID id) {
         articleService.deleteArticle(id);
@@ -81,7 +84,13 @@ public class ArticleController {
     @PutMapping("/{id}/publish")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void publishArticle(@PathVariable UUID id) {
-        articleService.publishArticle(id);
+        publishArticle.publishArticle(
+                articleService.getArticle(id).orElseThrow(() -> new EntityNotFoundException("Article")),
+                ArticlePublishConfig.builder()
+                        .pushToCategory(true)
+                        .pushToHome(true)
+                        .homeSection(Section.MAIN)
+                        .build());
     }
 
     @PutMapping("/{id}/hide")

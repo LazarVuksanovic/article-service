@@ -26,11 +26,11 @@ public class RevalidationServiceImpl implements RevalidationService {
         var slugValue = article.getSlug();
         if (slugValue != null && !slugValue.isBlank()) {
             revalidate(
-                    slugValue,
+                    "article-" + slugValue,
                     "/" + article.getCategory().getSlug() + "/" + slugValue
             );
             revalidate(
-                    slugValue,
+                    "article-" + slugValue,
                     "/lat/" + article.getCategory().getSlug() + "/" + slugValue
             );
         }

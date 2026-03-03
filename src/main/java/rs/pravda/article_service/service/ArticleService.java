@@ -2,10 +2,7 @@ package rs.pravda.article_service.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rs.pravda.article_service.dto.article.ArticledFilterDto;
-import rs.pravda.article_service.dto.article.CreateArticleDto;
-import rs.pravda.article_service.dto.article.TranslatedArticle;
-import rs.pravda.article_service.dto.article.UpdateArticleDto;
+import rs.pravda.article_service.dto.article.*;
 import rs.pravda.article_service.model.Article;
 
 import java.util.List;
@@ -33,8 +30,6 @@ public interface ArticleService extends TranslationService<Article, TranslatedAr
     void deleteArticle(UUID articleId);
 
     void archiveArticle(UUID articleId);
-
-    void publishArticle(UUID articleId);
 
     void hideArticle(UUID articleId);
 }

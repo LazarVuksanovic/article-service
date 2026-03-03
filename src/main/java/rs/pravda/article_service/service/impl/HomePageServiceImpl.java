@@ -96,6 +96,26 @@ public class HomePageServiceImpl implements HomePageService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public void addArticleToLayout(Article article, Category category, Section section, int position) {
+        List<ArticleSection> existing = articleSectionRepository.findByCategory(category).stream()
+                .filter(articleInSection -> section.equals(articleInSection.getSection()))
+                .filter(articleInSection -> articleInSection.getOrder() >= position)
+                .map(ArticleSection::increaseOrder)
+                .toList();
+
+        var newEntry = ArticleSection.builder()
+                .article(article)
+                .category(category)
+                .section(section)
+                .order(position)
+                .build();
+
+        articleSectionRepository.saveAll(existing);
+        articleSectionRepository.save(newEntry);
+    }
+
     private List<ArticleSection> createNewSections(Category category, Map<Section, List<UUID>> sectionsMap) {
         return sectionsMap.entrySet().stream()
                 .flatMap(entry -> mapToArticleSections(category, entry.getKey(), entry.getValue()))
@@ -110,18 +130,14 @@ public class HomePageServiceImpl implements HomePageService {
 
         return IntStream.range(0, articleIds.size())
                 .mapToObj(i -> {
-                    UUID id = articleIds.get(i);
-                    Article article = articlesMap.get(id);
-
-                    if (article == null) {
-                        throw new EntityNotFoundException("Article with ID " + id + " not found");
-                    }
+                    var id = articleIds.get(i);
+                    var article = articlesMap.get(id);
 
                     return ArticleSection.builder()
                             .category(category)
                             .article(article)
                             .section(section)
-                            .order(i)
+                            .order(i+1)
                             .build();
                 });
     }
