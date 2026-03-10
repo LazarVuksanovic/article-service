@@ -22,4 +22,7 @@ public class SecurityPropsConfig {
 
     @Value("${application.security.jwt.cookie.domain:#{null}}")
     private String cookieDomain;
+
+    @Value("${application.security.google.client-id}")
+    private String googleClientId;
 }

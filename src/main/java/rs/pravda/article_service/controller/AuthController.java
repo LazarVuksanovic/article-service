@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import rs.pravda.article_service.dto.auth.AuthRequest;
 import rs.pravda.article_service.dto.auth.AuthResponse;
 import rs.pravda.article_service.dto.auth.ChangePasswordRequest;
+import rs.pravda.article_service.dto.auth.GoogleAuthRequest;
+import rs.pravda.article_service.dto.auth.RegisterRequest;
 import rs.pravda.article_service.service.AuthService;
 
 import java.security.Principal;
@@ -19,12 +21,32 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthResponse register(
+            @RequestBody @Valid RegisterRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.register(request, response);
+    }
+
     @PostMapping("/login")
     public AuthResponse login(
             @RequestBody AuthRequest request,
             HttpServletResponse response
     ) {
         return authService.authenticate(request, response);
+    }
+
+    // Called by the frontend after Google One Tap / OAuth popup completes.
+    // The frontend sends the raw Google ID token (credential); we verify it
+    // server-side and issue our own JWT pair.
+    @PostMapping("/google")
+    public AuthResponse googleAuth(
+            @RequestBody @Valid GoogleAuthRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.googleAuth(request, response);
     }
 
     @PostMapping("/refresh")

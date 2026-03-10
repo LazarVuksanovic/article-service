@@ -8,10 +8,11 @@ databaseChangeLog:
             columns:
               - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
               - column: { name: email, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
-              - column: { name: password, type: VARCHAR(255) }
+              - column: { name: password, type: VARCHAR(255), constraints: { nullable: true } }
               - column: { name: first_name, type: VARCHAR(255) }
               - column: { name: last_name, type: VARCHAR(255) }
               - column: { name: role, type: VARCHAR(50) }
+              - column: { name: provider, type: VARCHAR(50), defaultValue: "LOCAL", constraints: { nullable: false } }
               - column: { name: created_by, type: VARCHAR(255) }
               - column: { name: created_at, type: TIMESTAMP, defaultValueComputed: "NOW()" }
               - column: { name: last_modified_by, type: VARCHAR(255) }
