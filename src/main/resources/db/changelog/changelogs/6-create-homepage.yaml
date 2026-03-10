@@ -1,14 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 1.0.0-homepage-tables
+      id: 1.0.0-homepage-tables-refactor
       author: pravda
       changes:
-        - createTable:
-            tableName: home_page
-            columns:
-              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
-              - column: { name: category_id, type: UUID, constraints: { unique: true } }
-
         - createTable:
             tableName: home_page_nav_categories
             columns:
@@ -17,48 +11,32 @@ databaseChangeLog:
               - column: { name: priority, type: INT, constraints: { nullable: false } }
 
         - createTable:
-            tableName: home_page_main_articles
+            tableName: article_section
             columns:
-              - column: { name: home_page_id, type: UUID, constraints: { nullable: false } }
-              - column: { name: main_id, type: UUID, constraints: { nullable: false } }
-              - column: { name: priority, type: INT, constraints: { nullable: false } }
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: category_id, type: UUID }
+              - column: { name: article_id, type: UUID, constraints: { nullable: false } }
+              - column: { name: section, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: sort_order, type: INT, constraints: { nullable: false } }
 
-        - createTable:
-            tableName: home_page_side_articles
-            columns:
-              - column: { name: home_page_id, type: UUID, constraints: { nullable: false } }
-              - column: { name: side_id, type: UUID, constraints: { nullable: false } }
-              - column: { name: priority, type: INT, constraints: { nullable: false } }
-
-        # --- Constraints with CASCADE ---
         - addForeignKeyConstraint:
-            baseTableName: home_page
+            baseTableName: article_section
             baseColumnNames: category_id
             referencedTableName: category
             referencedColumnNames: id
-            constraintName: fk_hp_category
-            onDelete: CASCADE # Deleting category deletes the homepage instance
+            constraintName: fk_as_category
+            onDelete: CASCADE
 
         - addForeignKeyConstraint:
-            baseTableName: home_page_nav_categories
-            baseColumnNames: home_page_id
-            referencedTableName: home_page
+            baseTableName: article_section
+            baseColumnNames: article_id
+            referencedTableName: article
             referencedColumnNames: id
-            constraintName: fk_hp_nav_hp
-            onDelete: CASCADE # Deleting homepage cleans up its nav list
+            constraintName: fk_as_article
+            onDelete: CASCADE
 
-        - addForeignKeyConstraint:
-            baseTableName: home_page_main_articles
-            baseColumnNames: home_page_id
-            referencedTableName: home_page
-            referencedColumnNames: id
-            constraintName: fk_hp_main_hp
-            onDelete: CASCADE # Deleting homepage cleans up its main articles list
-
-        - addForeignKeyConstraint:
-            baseTableName: home_page_side_articles
-            baseColumnNames: home_page_id
-            referencedTableName: home_page
-            referencedColumnNames: id
-            constraintName: fk_hp_side_hp
-            onDelete: CASCADE # Deleting homepage cleans up its side articles list
+        - createIndex:
+            tableName: article_section
+            indexName: idx_article_section_cat
+            columns:
+              - column: { name: category_id }

@@ -8,25 +8,13 @@ import java.util.List;
 import java.util.UUID;
 
 public record CreateArticleDto(
-
-        @NotEmpty
-        TranslatedText title,
-
-        @NotEmpty
-        TranslatedText content,
-
-        @NotEmpty
-        TranslatedText teaser,
-
-        @NotNull
-        UUID categoryId,
-
+        @NotEmpty TranslatedText title,
+        @NotEmpty TranslatedText content,
+        @NotEmpty TranslatedText teaser,
+        @NotNull UUID categoryId,
         String author,
         List<UUID> tagIds,
         String coverImageUrl,
-        boolean publish,
-        boolean hasEnglish,
-        boolean pushToMainPage,
-        boolean pushToCategoryMainPage
+        PublishArticle publishArticle
 ) {
 }

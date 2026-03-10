@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import rs.pravda.article_service.client.FrontendClient;
 import rs.pravda.article_service.model.Article;
-import rs.pravda.article_service.model.homepage.HomePage;
+import rs.pravda.article_service.model.Category;
 import rs.pravda.article_service.service.RevalidationService;
 
 import java.util.Map;
@@ -26,19 +26,19 @@ public class RevalidationServiceImpl implements RevalidationService {
         var slugValue = article.getSlug();
         if (slugValue != null && !slugValue.isBlank()) {
             revalidate(
-                    slugValue,
+                    "article-" + slugValue,
                     "/" + article.getCategory().getSlug() + "/" + slugValue
             );
             revalidate(
-                    slugValue,
+                    "article-" + slugValue,
                     "/lat/" + article.getCategory().getSlug() + "/" + slugValue
             );
         }
     }
 
     @Override
-    public void revalidateHomePage(HomePage homePage) {
-        var categorySlug = homePage.getCategory() != null ? homePage.getCategory().getSlug() : "";
+    public void revalidateHomePage(Category category) {
+        var categorySlug = category != null ? category.getSlug() : "";
         var tag = categorySlug.isEmpty() ?  "homepage" : "homepage-" + categorySlug;
 
         revalidate(tag, "/" + categorySlug);

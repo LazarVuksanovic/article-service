@@ -75,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         var newCategory = Category.builder()
                 .name(createCategory.name())
                 .parentCategory(null)
-                .slug(toSlug(createCategory.name().get(Locale.of("sr-Latn"))))
+                .slug(toSlug(createCategory.name().get(Locale.forLanguageTag("sr-Latn"))))
                 .build();
 
         if(createCategory.parentCategoryId() != null){
@@ -134,6 +134,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public static String toSlug(String name) {
+        if(name == null) return null;
         return name.trim().toLowerCase().replaceAll("\\s+", "-");
     }
 }

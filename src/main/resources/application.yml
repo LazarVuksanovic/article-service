@@ -28,11 +28,21 @@ application:
     url: "http://localhost:3001"
     revalidate-secret: "your_chosen_secret_password"
   security:
+    google:
+      client-id:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      secret-key:
       expiration: 900000 # 15 minutes
       refresh-token:
         expiration: 21600000 # 6 hours
       cookie:
         secure: false
         domain: null
+  s3:
+    access-key: mock
+    secret-key: mock
+    endpoint: fsn1.your-objectstorage.com
+    region: eu-central
+    bucket: pravda-images
+  imgproxy:
+    url: "http://localhost:8082"

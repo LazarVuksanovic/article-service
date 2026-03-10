@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import rs.pravda.article_service.dto.article.ArticledFilterDto;
 import rs.pravda.article_service.model.Article;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,23 +25,19 @@ public class ArticleSpecification {
                 predicates.add(titleContainsPredicate(root, cb, filter.query()));
             }
 
-            // 2. Visibility Logic (publishedAt)
-            // If showHidden is false, we ONLY show articles where publishedAt is NOT NULL
             if (!filter.showHidden()) {
                 predicates.add(cb.isNotNull(root.get("publishedAt")));
+                predicates.add(cb.lessThanOrEqualTo(root.get("publishedAt"), LocalDateTime.now()));
             }
 
-            // 3. Archived Logic
             if (!filter.showArchived()) {
                 predicates.add(cb.isFalse(root.get("archived")));
             }
 
-            // 4. Category Filter
             if (filter.categoryIds() != null && !filter.categoryIds().isEmpty()) {
                 predicates.add(root.get("category").get("id").in(filter.categoryIds()));
             }
 
-            // 5. Created Date Range
             if (filter.from() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), filter.from()));
             }

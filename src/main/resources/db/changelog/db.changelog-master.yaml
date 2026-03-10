@@ -12,6 +12,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/changelogs/6-create-homepage.yaml
   - include:
-      file: db/changelog/seedData.yaml
+      file: db/changelog/changelogs/7-create-image-table.yaml
   - include:
-      file: db/changelog/seed-homepage-data.yaml
+      file: db/changelog/changelogs/8-create-image-tag.yaml
+  - include:
+      file: db/changelog/changelogs/9-create-scheduled-publishing.yaml
+  - include:
+      file: db/changelog/seedData.yaml
