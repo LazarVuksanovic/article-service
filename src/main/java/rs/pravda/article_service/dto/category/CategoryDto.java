@@ -22,6 +22,7 @@ public record CategoryDto(
                 .id(category.getId())
                 .parentCategoryId(category.getParentCategory() != null ? category.getParentCategory().getId() : null)
                 .name(category.getName())
+                .slug(category.getSlug())
                 .build();
     }
 }
